@@ -21,4 +21,5 @@ Board configuration: Arduino Nano v3 (new Bootloader)
 - Standard Arduino Libraries
 - [RadioHead LoRa Library](http://www.airspayce.com/mikem/arduino/RadioHead/)
 
+Libraries that are not included in PlatformIO shall be added to the PlatformIO lib folder.
 TO COMPLETE
