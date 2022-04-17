@@ -14,8 +14,8 @@
 #define TE_CS_PIN         (10)
 
 //LoRa Pins
-#define LORA_PACKET_SIZE  (12)
 #define LORA_FREQ         (868.0)
+#define LORA_SF           (9)
 
 
 // ======================================================== Global Variables ========================================================
@@ -27,7 +27,6 @@ RH_RF95 rf95(TE_CS_PIN, TE_INT_PIN);
 // ======================================================== Function Prototypes ========================================================
 void heartbeat(void);
 void LoRa_parse(uint8_t buf[RH_RF95_MAX_MESSAGE_LEN]);
-
 
 // ======================================================== Setup ========================================================
 void setup() {
@@ -46,7 +45,7 @@ void setup() {
   Serial.println("Init Sucess!");
   rf95.setTxPower(12, false);
   rf95.setFrequency(LORA_FREQ);
-
+  rf95.setSpreadingFactor(LORA_SF);
 
 }
 
@@ -96,88 +95,109 @@ void heartbeat(void) {
 
 void LoRa_parse(uint8_t buf[RH_RF95_MAX_MESSAGE_LEN]){
 
-  //buf = strtol(buf, NULL, DEC);
+  float float_buffer;
 
   Serial.print("Timestamp: ");
-  Serial.println(buf[0]);
+  memcpy(&float_buffer, &(buf[0]), sizeof(float));
+  Serial.println(float_buffer);
 
   Serial.print("Acceleration X: ");
-  Serial.print(buf[1]);
+  memcpy(&float_buffer, &(buf[4]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.print(", Y: ");
-  Serial.print(buf[2]);
+  memcpy(&float_buffer, &(buf[8]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.print(", Z: ");
-  Serial.print(buf[3]);
+  memcpy(&float_buffer, &(buf[12]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.println(" m/s^2");
 
   Serial.print("Rotation X: ");
-  Serial.print(buf[4]);
+  memcpy(&float_buffer, &(buf[16]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.print(", Y: ");
-  Serial.print(buf[5]);
+  memcpy(&float_buffer, &(buf[20]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.print(", Z: ");
-  Serial.print(buf[6]);
+  memcpy(&float_buffer, &(buf[24]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.println(" rad/s");
 
   Serial.print("Temperature: ");
-  Serial.print(buf[7]);
+  memcpy(&float_buffer, &(buf[28]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.println(" degC");
 
   Serial.print(F("Temperature = "));
-  Serial.print(buf[8]);
+  memcpy(&float_buffer, &(buf[32]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.println(" *C");
 
   Serial.print(F("Pressure = "));
-  Serial.print(buf[9]);
+  memcpy(&float_buffer, &(buf[36]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.println(" Pa");
 
   Serial.print(F("Approx altitude = "));
-  Serial.print(buf[10]); /* Adjusted to local forecast! */
+  memcpy(&float_buffer, &(buf[40]), sizeof(float));
+  Serial.print(float_buffer); /* Adjusted to local forecast! */
   Serial.println(" m");
 
   Serial.print(F("Vbatt 1 = "));
-  Serial.print(buf[11]);
+  memcpy(&float_buffer, &(buf[44]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.println(" V");
   
   Serial.print(F("Vbatt 2 = "));
-  Serial.print(buf[12]);
+  memcpy(&float_buffer, &(buf[48]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.println(" V");
 
   Serial.print(F("Vbatt Ematch = "));
-  Serial.print(buf[13]);
+  memcpy(&float_buffer, &(buf[52]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.println(" V");
 
   Serial.print(F("Current State = "));
-  Serial.println(buf[14]);
+  Serial.println(buf[56]);
 
   Serial.print(F("Ematch (1-4) Status = "));
-  Serial.print(buf[15]);
+  Serial.print(buf[57]);
   Serial.print(F(" "));
-  Serial.print(buf[16]);
+  Serial.print(buf[58]);
   Serial.print(F(" "));
-  Serial.print(buf[17]);
+  Serial.print(buf[59]);
   Serial.print(F(" "));
-  Serial.println(buf[18]);
+  Serial.println(buf[60]);
 
   Serial.print(F("GPS Nb Fix = "));
-  Serial.print(buf[19]);
+  memcpy(&float_buffer, &(buf[61]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.println(" Sats");
 
+  Serial.print(F("GPS HDOP = "));
+  memcpy(&float_buffer, &(buf[65]), sizeof(float));
+  Serial.print(float_buffer);
+
   Serial.print(F("GPS Longitude = "));
-  Serial.print(buf[20]);
+  memcpy(&float_buffer, &(buf[69]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.println(" *");
 
   Serial.print(F("GPS latitude = "));
-  Serial.print(buf[21]);
+  memcpy(&float_buffer, &(buf[73]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.println(" *");
 
   Serial.print(F("GPS Altitude = "));
-  Serial.print(buf[22]);
+  memcpy(&float_buffer, &(buf[77]), sizeof(float));
+  Serial.print(float_buffer);
   Serial.println(" m");
 
   Serial.print(F("GPS Speed = "));
-  Serial.print(buf[23]);
-  Serial.println(" km/h");
+  memcpy(&float_buffer, &(buf[81]), sizeof(float));
+  Serial.print(float_buffer);
+  Serial.println(" m/s");
 
   Serial.println("");
-
-
 }
