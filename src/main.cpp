@@ -17,6 +17,9 @@
 #define LORA_FREQ         (868.0)
 #define LORA_SF           (9)
 
+// ======================================================== LoRa Commands ========================================================
+#define LORA_ARM              (0xA0)
+#define LORA_RESET            (0xFF)
 
 // ======================================================== Global Variables ========================================================
 uint32_t Rx_buffer[RH_RF95_MAX_MESSAGE_LEN] = {0};
@@ -65,14 +68,6 @@ void loop()
       Serial.println(rf95.lastRssi(), DEC);
       LoRa_parse(buf);
       digitalWrite(RX_LED_PIN, LOW);
-
-      // Send a reply
-      digitalWrite(TX_LED_PIN, HIGH);
-      uint8_t data[] = "ACK";
-      rf95.send(data, sizeof(data));
-      rf95.waitPacketSent();
-      Serial.println("Sent ACK");
-      digitalWrite(TX_LED_PIN, LOW);
     }
     else
     {
